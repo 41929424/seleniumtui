@@ -22,8 +22,13 @@ class CheckoutPage(BasePage):
             (self.POSTAL_CODE, postal),
         ):
             field = self.wait.until(EC.visibility_of_element_located(locator))
-            field.clear()
-            field.send_keys(value)
+            current_value = field.get_attribute("value") or ""
+            if current_value != value:
+                if current_value:
+                    field.clear()
+                if value:
+                    field.send_keys(value)
+                self.wait.until(lambda _driver: field.get_attribute("value") == value)
 
     def error_message(self) -> str:
         return self.text(self.ERROR)
