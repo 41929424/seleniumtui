@@ -27,7 +27,9 @@ class CheckoutPage(BasePage):
                 field.click()
                 field.send_keys(value)
                 self.wait.until(
-                    lambda _driver, field=field, value=value: field.get_property("value") == value
+                    lambda driver, locator=locator, value=value: (
+                        driver.find_element(*locator).get_property("value") == value
+                    )
                 )
 
     def error_message(self) -> str:
