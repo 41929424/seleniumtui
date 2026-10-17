@@ -13,7 +13,6 @@ class CheckoutPage(BasePage):
     ERROR = (By.CSS_SELECTOR, "[data-test='error']")
 
     def wait_loaded(self):
-        self.wait.until(lambda driver: driver.current_url.endswith("/checkout-step-one.html"))
         self.wait.until(EC.visibility_of_element_located(self.FIRST_NAME))
 
     def fill_information(self, first: str, last: str, postal: str):

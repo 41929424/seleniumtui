@@ -45,7 +45,11 @@ def test_cart_04_item_quantity(inventory, driver):
 def test_cart_05_cart_persists_during_navigation(inventory, driver, app_url):
     inventory.add_product("Sauce Labs Backpack")
     cart = CartPage(driver).open(app_url)
-    cart.click(cart.CONTINUE)
-    assert InventoryPage(driver).cart_count() == 1
+    cart.click_and_wait(
+        cart.CONTINUE,
+        lambda _driver: driver.current_url.endswith("/inventory.html"),
+    )
+    inventory = InventoryPage(driver)
+    assert inventory.cart_count() == 1
     CartPage(driver).open(app_url)
     assert "Sauce Labs Backpack" in CartPage(driver).names()

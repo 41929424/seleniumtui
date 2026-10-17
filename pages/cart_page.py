@@ -22,8 +22,10 @@ class CartPage(BasePage):
     def remove(self, name: str):
         slug = name.lower().replace(" ", "-")
         previous_count = self.item_count()
-        self.click((By.ID, f"remove-{slug}"))
-        self.wait.until(lambda _driver: self.item_count() == previous_count - 1)
+        self.click_and_wait(
+            (By.ID, f"remove-{slug}"),
+            lambda _driver: self.item_count() == previous_count - 1,
+        )
 
     def item_count(self) -> int:
         return len(self.driver.find_elements(*self.ITEMS))
