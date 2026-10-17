@@ -23,7 +23,12 @@ class CheckoutPage(BasePage):
         ):
             field = self.wait.until(EC.visibility_of_element_located(locator))
             if value:
+                # Focus each control and wait until the typed value is present.
+                field.click()
                 field.send_keys(value)
+                self.wait.until(
+                    lambda _driver, field=field, value=value: field.get_property("value") == value
+                )
 
     def error_message(self) -> str:
         return self.text(self.ERROR)
