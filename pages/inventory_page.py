@@ -47,3 +47,4 @@ class InventoryPage(BasePage):
     def logout(self):
         self.click(self.MENU)
         self.click(self.LOGOUT)
+        self.wait.until(EC.visibility_of_element_located((By.ID, "login-button")))
