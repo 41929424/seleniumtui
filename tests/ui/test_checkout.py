@@ -15,7 +15,9 @@ def checkout(driver, app_url):
     InventoryPage(driver).add_product("Sauce Labs Backpack")
     cart = CartPage(driver).open(app_url)
     cart.click(cart.CHECKOUT)
-    return CheckoutPage(driver), app_url
+    page = CheckoutPage(driver)
+    page.wait_loaded()
+    return page, app_url
 
 
 def test_chk_01_successful_order(checkout, driver):
@@ -23,7 +25,7 @@ def test_chk_01_successful_order(checkout, driver):
     page.fill_information("Alex", "Tester", "LV-1001")
     page.click(page.CONTINUE)
     page.click(page.FINISH)
-    assert driver.find_element(By.CSS_SELECTOR, ".complete-header").text == "Thank you for your order!"
+    assert page.text((By.CSS_SELECTOR, ".complete-header")) == "Thank you for your order!"
 
 
 def test_chk_02_missing_first_name(checkout):

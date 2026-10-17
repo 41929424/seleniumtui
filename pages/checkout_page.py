@@ -1,4 +1,5 @@
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
 
 from pages.base_page import BasePage
 
@@ -11,13 +12,17 @@ class CheckoutPage(BasePage):
     FINISH = (By.ID, "finish")
     ERROR = (By.CSS_SELECTOR, "[data-test='error']")
 
+    def wait_loaded(self):
+        self.wait.until(lambda driver: driver.current_url.endswith("/checkout-step-one.html"))
+        self.wait.until(EC.visibility_of_element_located(self.FIRST_NAME))
+
     def fill_information(self, first: str, last: str, postal: str):
         for locator, value in (
             (self.FIRST_NAME, first),
             (self.LAST_NAME, last),
             (self.POSTAL_CODE, postal),
         ):
-            field = self.driver.find_element(*locator)
+            field = self.wait.until(EC.visibility_of_element_located(locator))
             field.clear()
             field.send_keys(value)
 

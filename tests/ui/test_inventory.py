@@ -1,5 +1,4 @@
 import pytest
-from selenium.webdriver.common.by import By
 
 from pages.inventory_page import InventoryPage
 from pages.login_page import LoginPage
@@ -38,4 +37,4 @@ def test_cat_04_sort_name_a_to_z(inventory):
 def test_cat_05_open_product_card(inventory, driver):
     name = inventory.names()[0]
     inventory.open_product(name)
-    assert driver.find_element(By.CSS_SELECTOR, ".inventory_details_name").text == name
+    assert inventory.text((By.CSS_SELECTOR, ".inventory_details_name")) == name

@@ -38,4 +38,4 @@ def test_auth_05_logout(driver, app_url):
     inventory = InventoryPage(driver)
     inventory.wait_loaded()
     inventory.logout()
-    assert driver.find_element(By.ID, "login-button").is_displayed()
+    assert driver.find_element(By.ID, "user-name").is_displayed()

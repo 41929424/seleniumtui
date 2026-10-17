@@ -35,10 +35,13 @@ class InventoryPage(BasePage):
 
     def open_product(self, name: str):
         self.click((By.LINK_TEXT, name))
+        self.wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".inventory_details_name")))
 
     def add_product(self, name: str):
         slug = name.lower().replace(" ", "-")
+        previous_count = self.cart_count()
         self.click((By.ID, f"add-to-cart-{slug}"))
+        self.wait.until(lambda _driver: self.cart_count() == previous_count + 1)
 
     def cart_count(self) -> int:
         badges = self.driver.find_elements(By.CSS_SELECTOR, ".shopping_cart_badge")
@@ -47,4 +50,5 @@ class InventoryPage(BasePage):
     def logout(self):
         self.click(self.MENU)
         self.click(self.LOGOUT)
-        self.wait.until(EC.visibility_of_element_located((By.ID, "login-button")))
+        self.wait.until(EC.invisibility_of_element_located(self.TITLE))
+        self.wait.until(EC.visibility_of_element_located((By.ID, "user-name")))
