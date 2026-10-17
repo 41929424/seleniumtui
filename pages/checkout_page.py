@@ -1,5 +1,7 @@
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
 
 from pages.base_page import BasePage
 
@@ -23,14 +25,35 @@ class CheckoutPage(BasePage):
         ):
             field = self.wait.until(EC.visibility_of_element_located(locator))
             if value:
-                # Focus each control and wait until the typed value is present.
                 field.click()
                 field.send_keys(value)
-                self.wait.until(
-                    lambda driver, locator=locator, value=value: (
-                        driver.find_element(*locator).get_property("value") == value
+                try:
+                    WebDriverWait(self.driver, 2).until(
+                        lambda driver, locator=locator, value=value: (
+                            driver.find_element(*locator).get_property("value") == value
+                        )
                     )
-                )
+                except TimeoutException:
+                    # Fall back to the native input setter when headless Chrome
+                    # drops keyboard input on the controlled checkout form.
+                    self.driver.execute_script(
+                        """
+                        const [input, value] = arguments;
+                        const setter = Object.getOwnPropertyDescriptor(
+                            window.HTMLInputElement.prototype, "value"
+                        ).set;
+                        setter.call(input, value);
+                        input.dispatchEvent(new Event("input", { bubbles: true }));
+                        input.dispatchEvent(new Event("change", { bubbles: true }));
+                        """,
+                        self.driver.find_element(*locator),
+                        value,
+                    )
+                    self.wait.until(
+                        lambda driver, locator=locator, value=value: (
+                            driver.find_element(*locator).get_property("value") == value
+                        )
+                    )
 
     def error_message(self) -> str:
         return self.text(self.ERROR)
