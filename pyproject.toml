@@ -1,0 +1,29 @@
+[project]
+name = "saucedemo-qa-workbench"
+version = "0.1.0"
+description = "SauceDemo UI regression suite with a Textual workbench"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "selenium>=4.25",
+    "textual>=0.80",
+    "allure-pytest>=2.13",
+]
+
+[dependency-groups]
+dev = ["pytest>=8.3", "ruff>=0.7"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers"
+markers = ["ui: browser-based UI test requiring Chrome"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.ruff.format]
+quote-style = "double"

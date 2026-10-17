@@ -1,0 +1,9 @@
+.venv/
+.pytest_cache/
+__pycache__/
+*.py[cod]
+/allure-results/
+/allure-report/
+.ruff_cache/
+.qa-progress-results.xml
+.qa-progress.json
